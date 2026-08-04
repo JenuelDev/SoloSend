@@ -1,0 +1,32 @@
+{
+  "manifest_version": 2,
+  "name": "SoloSend",
+  "version": "1.0.0",
+  "description": "From the compose window, send your email to many recipients one at a time, with a delay between each — or schedule it for later.",
+  "author": "Jenuel Oras Ganawed",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "solosend@vocphone.com",
+      "strict_min_version": "115.0"
+    }
+  },
+  "icons": {
+    "48": "icons/icon.svg",
+    "96": "icons/icon.svg"
+  },
+  "permissions": [
+    "compose",
+    "accountsRead",
+    "storage",
+    "unlimitedStorage",
+    "alarms",
+    "notifications"
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "compose_action": {
+    "default_title": "SoloSend",
+    "default_icon": "icons/icon.svg"
+  }
+}

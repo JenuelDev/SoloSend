@@ -1,0 +1,134 @@
+:root {
+  --accent: #2b7de9;
+  --accent-hover: #1f66c4;
+  --danger: #d64545;
+  --ok: #2e9e5b;
+  --border: color-mix(in srgb, currentColor 22%, transparent);
+  --muted: color-mix(in srgb, currentColor 55%, transparent);
+  --field-bg: color-mix(in srgb, currentColor 6%, transparent);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 12px 16px 18px;
+  font: 13px/1.45 system-ui, "Segoe UI", sans-serif;
+}
+
+header { display: flex; align-items: center; gap: 8px; }
+.logo { width: 22px; height: 22px; }
+h1 { font-size: 16px; margin: 0; font-weight: 600; }
+h2 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin: 16px 0 6px;
+}
+
+.summary {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--field-bg);
+  font-size: 12px;
+}
+.summary b { font-weight: 600; }
+
+.muted { color: var(--muted); }
+.small { font-size: 11px; }
+code { font-family: ui-monospace, monospace; font-size: 11px; }
+
+input[type="text"], input[type="number"], input[type="datetime-local"],
+select {
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--field-bg);
+  color: inherit;
+  font: inherit;
+}
+input:focus, select:focus { outline: none; border-color: var(--accent); }
+select { max-width: 200px; }
+
+.sources { display: flex; flex-direction: column; gap: 6px; }
+.source { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+
+.panel {
+  margin: 2px 0 6px 24px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.row { display: flex; align-items: center; gap: 8px; }
+.row .grow { flex: 1; }
+.row input[type="number"] { width: 70px; }
+.unit { color: var(--muted); }
+
+.inline { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+
+.preview { margin: 8px 0 0; font-size: 12px; min-height: 1em; }
+.preview.bad { color: var(--danger); }
+
+button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+button:disabled { opacity: 0.5; cursor: default; }
+
+.actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+.primary { background: var(--accent); color: #fff; flex: 1; }
+.primary:hover:not(:disabled) { background: var(--accent-hover); }
+.secondary { background: var(--field-bg); color: inherit; border: 1px solid var(--border); }
+.ghost { background: transparent; color: var(--muted); }
+.danger { background: var(--danger); color: #fff; }
+
+.error { color: var(--danger); margin: 10px 0 0; }
+
+.scheduled { list-style: none; margin: 6px 0 0; padding: 0; }
+.scheduled li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+}
+.scheduled .when { font-weight: 600; }
+.scheduled .grow { flex: 1; }
+.scheduled button { padding: 3px 8px; font-size: 11px; }
+
+/* progress */
+.progress-head { display: flex; justify-content: space-between; align-items: baseline; margin-top: 4px; }
+.phase { font-weight: 600; }
+.count { color: var(--muted); font-variant-numeric: tabular-nums; }
+.bar { height: 8px; border-radius: 6px; background: var(--field-bg); overflow: hidden; margin: 8px 0; }
+.bar-fill { height: 100%; width: 0; background: var(--accent); transition: width 0.3s ease; }
+.current { margin: 6px 0 0; font-size: 12px; color: var(--muted); min-height: 1em; word-break: break-all; }
+.countdown { margin: 6px 0 0; font-weight: 600; color: var(--accent); }
+.stats { display: flex; gap: 14px; margin: 10px 0; }
+.stat.ok { color: var(--ok); }
+.stat.bad { color: var(--danger); }
+.log {
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  background: var(--field-bg);
+}
+.log-line { padding: 1px 0; white-space: pre-wrap; word-break: break-all; }
+.log-line.bad { color: var(--danger); }
+.log-time { color: var(--muted); }

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>SoloSend</title>
+  <link rel="stylesheet" href="dialog.css" />
+</head>
+<body>
+  <header>
+    <img src="../icons/icon.svg" alt="" class="logo" />
+    <h1>SoloSend</h1>
+  </header>
+
+  <!-- SETUP VIEW -->
+  <section id="setupView">
+    <div id="templateSummary" class="summary">Reading this email…</div>
+
+    <h2>Recipients</h2>
+    <div class="sources">
+      <label class="source">
+        <input type="radio" name="source" value="to" checked />
+        <span>This email's <b>To</b> field <span id="toCount" class="muted"></span></span>
+      </label>
+
+      <label class="source">
+        <input type="radio" name="source" value="csv" />
+        <span>CSV file</span>
+      </label>
+      <div id="csvPanel" class="panel" hidden>
+        <input type="file" id="csvFile" accept=".csv,text/csv,text/plain" />
+        <label class="inline"><input type="checkbox" id="csvHeader" checked /> First row is a header</label>
+        <div class="row">
+          <label class="grow" for="csvEmailCol">Email column</label>
+          <select id="csvEmailCol"></select>
+        </div>
+        <div class="row">
+          <label class="grow" for="csvNameCol">Name column <span class="muted">(optional)</span></label>
+          <select id="csvNameCol"></select>
+        </div>
+        <p class="muted small">Any column can be used in the message as <code>{{ColumnName}}</code>.</p>
+      </div>
+
+      <label class="source">
+        <input type="radio" name="source" value="txt" />
+        <span>Text file <span class="muted">(one email per line)</span></span>
+      </label>
+      <div id="txtPanel" class="panel" hidden>
+        <input type="file" id="txtFile" accept=".txt,text/plain" />
+      </div>
+    </div>
+
+    <p id="recipientPreview" class="preview"></p>
+
+    <h2>Sending</h2>
+    <div class="row">
+      <label class="grow" for="delay">Delay after each email</label>
+      <input id="delay" type="number" min="0" step="1" value="2" />
+      <span class="unit">sec</span>
+    </div>
+
+    <label class="inline" style="margin-top:8px">
+      <input type="checkbox" id="closeDraft" /> Close this draft after sending
+    </label>
+
+    <div id="schedulePanel" class="panel" hidden>
+      <div class="row">
+        <label class="grow" for="scheduleAt">Send at</label>
+        <input id="scheduleAt" type="datetime-local" />
+      </div>
+    </div>
+
+    <p id="setupError" class="error" hidden></p>
+
+    <div class="actions">
+      <button id="sendBtn" class="primary">Send now</button>
+      <button id="scheduleBtn" class="secondary">Schedule…</button>
+      <button id="confirmScheduleBtn" class="primary" hidden>Confirm schedule</button>
+      <button id="cancelScheduleBtn" class="ghost" hidden>Cancel</button>
+    </div>
+
+    <div id="scheduledWrap" hidden>
+      <h2>Scheduled</h2>
+      <ul id="scheduledList" class="scheduled"></ul>
+    </div>
+  </section>
+
+  <!-- PROGRESS VIEW -->
+  <section id="progressView" hidden>
+    <div class="progress-head">
+      <span id="progressPhase" class="phase">Sending…</span>
+      <span id="progressCount" class="count">0 / 0</span>
+    </div>
+    <div class="bar"><div id="barFill" class="bar-fill"></div></div>
+    <p id="progressCurrent" class="current"></p>
+    <p id="countdown" class="countdown" hidden></p>
+
+    <div class="stats">
+      <span class="stat ok">✓ <b id="statSent">0</b> sent</span>
+      <span class="stat bad">✗ <b id="statFailed">0</b> failed</span>
+    </div>
+
+    <div id="logBox" class="log"></div>
+
+    <div class="actions">
+      <button id="stopBtn" class="danger">Stop</button>
+      <button id="newBtn" class="secondary" hidden>New send</button>
+      <button id="closeBtn" class="ghost" hidden>Close</button>
+    </div>
+  </section>
+
+  <script src="dialog.js"></script>
+</body>
+</html>
