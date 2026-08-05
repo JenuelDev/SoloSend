@@ -65,14 +65,35 @@ function broadcast() {
 
 /* -------------------------------------------------------------- send loop */
 
-function personalize(template, recipient) {
+function escapeHtml(s) {
+  return s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+}
+
+// `escape` is set for HTML bodies so a merge value like "Smith & Sons <Ltd>"
+// becomes text instead of broken markup. Subjects are plain text, so not there.
+function personalize(template, recipient, escape) {
   let out = String(template == null ? "" : template);
   const fields = recipient.fields || {};
-  const merged = { name: recipient.name || recipient.email.split("@")[0], email: recipient.email, ...fields };
+  // Canonical name/email win over same-named columns, and an empty name column
+  // falls back to the address's local part.
+  const merged = {
+    ...fields,
+    email: recipient.email,
+    name: recipient.name || fields.name || recipient.email.split("@")[0],
+  };
   for (const [key, value] of Object.entries(merged)) {
-    out = out.split(`{{${key}}}`).join(value == null ? "" : String(value));
+    const replacement = value == null ? "" : String(value);
+    out = out.split(`{{${key}}}`).join(escape ? escapeHtml(replacement) : replacement);
   }
   return out;
+}
+
+// A display name is always quoted: "Doe, Jane <jane@x.com>" unquoted parses as
+// two separate recipients, which silently sends to the wrong addresses.
+function formatAddress(recipient) {
+  const name = (recipient.name || "").trim();
+  if (!name) return recipient.email;
+  return `"${name.replace(/([\\"])/g, "\\$1")}" <${recipient.email}>`;
 }
 
 // Rebuild File objects from the data URLs captured in the dialog.
@@ -90,8 +111,7 @@ async function buildFiles(attachments) {
 }
 
 async function sendOne(recipient, files, template) {
-  const to = recipient.name ? `${recipient.name} <${recipient.email}>` : recipient.email;
-  const details = { to: [to], subject: personalize(template.subject, recipient) };
+  const details = { to: [formatAddress(recipient)], subject: personalize(template.subject, recipient) };
   if (template.identityId) details.identityId = template.identityId;
 
   if (template.isPlainText) {
@@ -99,18 +119,29 @@ async function sendOne(recipient, files, template) {
     details.plainTextBody = personalize(template.plainTextBody, recipient);
   } else {
     details.isPlainText = false;
-    details.body = personalize(template.body, recipient);
+    details.body = personalize(template.body, recipient, true);
   }
 
   const tab = await browser.compose.beginNew(details);
-  for (const f of files) {
-    try {
-      await browser.compose.addAttachment(tab.id, f);
-    } catch (e) {
-      addLog(false, `Attachment "${f.name}" failed for ${recipient.email}`);
+  try {
+    for (const f of files) {
+      try {
+        await browser.compose.addAttachment(tab.id, f);
+      } catch (e) {
+        addLog(false, `Attachment "${f.name}" failed for ${recipient.email}`);
+      }
     }
+    // A successful send closes this tab itself.
+    await browser.compose.sendMessage(tab.id, { mode: "sendNow" });
+  } catch (e) {
+    // Otherwise it would be left open — one stranded compose window per failure.
+    try {
+      await browser.tabs.remove(tab.id);
+    } catch (_) {
+      /* already gone */
+    }
+    throw e;
   }
-  await browser.compose.sendMessage(tab.id, { mode: "sendNow" });
 }
 
 async function delayWithCountdown(seconds) {

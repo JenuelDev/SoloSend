@@ -71,11 +71,23 @@ Debug Add-ons page after editing the code.
 
 ## Package for distribution
 
+Only these four paths belong in the package — `manifest.json` must sit at the
+archive root, and `test-files/` and the logs must stay out.
+
 ```sh
-zip -r -FS solosend.xpi manifest.json background.js dialog icons -x '*.log'
+zip -r -FS dist/solosend.xpi manifest.json background.js dialog icons
 ```
 
-Install via **Add-ons Manager ▸ gear ▸ Install Add-on From File…**
+On Windows without `zip`:
+
+```powershell
+Compress-Archive -Path manifest.json,background.js,dialog,icons -DestinationPath dist\solosend.zip -Force
+Rename-Item dist\solosend.zip solosend.xpi
+```
+
+Install via **Add-ons Manager ▸ gear ▸ Install Add-on From File…** Thunderbird
+does not require signed add-ons, so this `.xpi` installs as-is; the same file is
+what you upload to [addons.thunderbird.net](https://addons.thunderbird.net).
 
 ## How it works
 

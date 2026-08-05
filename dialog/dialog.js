@@ -130,14 +130,20 @@ async function loadComposeDetails() {
     if (atts.length) attachNote = ` · ${atts.length} attachment(s)`;
   } catch (e) { /* ignore */ }
 
-  els.templateSummary.innerHTML =
-    `<b>Subject:</b> ${escapeHtml(subject)}${attachNote}` +
-    `<br><span class="muted">Body and attachments of this email are used as the template.</span>`;
+  // Built as nodes rather than innerHTML: the subject is user data, and the
+  // reviewer guide only allows innerHTML for static one-time markup.
+  const label = document.createElement("b");
+  label.textContent = "Subject:";
+  const note = document.createElement("span");
+  note.className = "muted";
+  note.textContent = "Body and attachments of this email are used as the template.";
+  els.templateSummary.replaceChildren(
+    label,
+    document.createTextNode(` ${subject}${attachNote}`),
+    document.createElement("br"),
+    note
+  );
   els.toCount.textContent = toList.length ? `(${toList.length})` : "(empty)";
-}
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 }
 
 /* -------------------------------------------------------- recipient source */
@@ -170,7 +176,8 @@ async function onCsvChosen() {
 
 function populateCsvColumns() {
   const hasHeader = els.csvHeader.checked;
-  const width = Math.max(...csv.rows.map((r) => r.length));
+  // reduce, not Math.max(...spread) — that overflows the stack on a large CSV.
+  const width = csv.rows.reduce((max, r) => Math.max(max, r.length), 0);
   const headers = [];
   for (let i = 0; i < width; i++) {
     headers.push(hasHeader ? (csv.rows[0][i] || `Column ${i + 1}`).trim() : `Column ${i + 1}`);
@@ -179,7 +186,7 @@ function populateCsvColumns() {
   csv.hasHeader = hasHeader;
 
   const fill = (select, includeNone) => {
-    select.innerHTML = "";
+    select.replaceChildren();
     if (includeNone) {
       const o = document.createElement("option");
       o.value = "-1"; o.textContent = "— none —";
@@ -405,7 +412,7 @@ function toLocalInputValue(d) {
 
 async function refreshScheduled() {
   const list = await browser.runtime.sendMessage({ type: "listScheduled" });
-  els.scheduledList.innerHTML = "";
+  els.scheduledList.replaceChildren();
   if (!list || list.length === 0) { els.scheduledWrap.hidden = true; return; }
   els.scheduledWrap.hidden = false;
   for (const item of list) {
@@ -457,7 +464,7 @@ function render(status) {
     els.progressCurrent.textContent = status.current ? `→ ${status.current}` : "";
   }
 
-  els.logBox.innerHTML = "";
+  els.logBox.replaceChildren();
   for (const entry of status.log) {
     const div = document.createElement("div");
     div.className = "log-line" + (entry.ok ? "" : " bad");
