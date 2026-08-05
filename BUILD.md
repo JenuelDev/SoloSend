@@ -2,16 +2,40 @@
 
 ## Summary
 
-**There is no build step.** No transpiler, bundler, minifier, preprocessor, or
-code generator is used anywhere in this project. There are no dependencies: no
-`package.json`, no `node_modules`, and no third-party libraries of any kind.
+**There is no build step.** No transpiler, bundler, minifier or preprocessor is
+used anywhere in this project. There are no dependencies: no `package.json`, no
+`node_modules`, and no third-party libraries of any kind.
 
-Every file inside the `.xpi` is the original, hand-written, human-readable source
-file, byte-for-byte identical to the corresponding file in this source archive.
+Every code file inside the `.xpi` is the original, hand-written, human-readable
+source file, byte-for-byte identical to the corresponding file in this source
+archive. The only generated files are the two icon PNGs, rasterised from the
+hand-written `icons/icon.svg` — see *Icon assets* below.
 "Building" consists only of creating a ZIP archive of five paths and renaming it
 to `.xpi`.
 
 SoloSend is MIT licensed; see `LICENSE`.
+
+## Icon assets
+
+`icons/icon.svg` is the hand-written source artwork. `icons/icon-32.png` and
+`icons/icon-64.png` are rasterised from it and are the only generated files in
+the project. They are committed because `manifest.json` references them, and the
+SVG they come from is included in this archive so they can be reproduced.
+
+They were produced with [`@resvg/resvg-js`](https://www.npmjs.com/package/@resvg/resvg-js)
+version **2.6.2** (prebuilt N-API binary, no system dependencies) via the script
+included here:
+
+```sh
+npm install --no-save @resvg/resvg-js@2.6.2
+node tools/render-icons.js
+```
+
+This is **not** part of building the add-on and is only needed if the artwork
+changes. The rasteriser is deliberately not a project dependency — `--no-save`
+keeps it out of any manifest — so the add-on itself still has no dependencies.
+`icons/icon.svg` also ships in the `.xpi`, where the dialog uses it directly as
+its header logo.
 
 ## Operating system and build environment
 
@@ -89,9 +113,10 @@ archive Thunderbird may refuse. `build.ps1` has no such constraint.
 
 ### Files deliberately not shipped
 
-`test-files/`, `README.md`, `BUILD.md`, `build.ps1`, `build.sh`, `.gitignore` and
-`dist/` are development-only material and are intentionally excluded from the
-`.xpi`. `test-files/` contains sample recipient lists used for manual testing.
+`test-files/`, `tools/`, `README.md`, `BUILD.md`, `build.ps1`, `build.sh`,
+`.gitignore` and `dist/` are development-only material and are intentionally
+excluded from the `.xpi`. `test-files/` contains sample recipient lists used for
+manual testing; `tools/` contains the icon rasteriser described above.
 
 ## Verifying an exact copy
 

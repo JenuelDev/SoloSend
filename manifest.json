@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "SoloSend",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "From the compose window, send your email to many recipients one at a time, with a delay between each — or schedule it for later.",
   "author": "Jenuel Oras Ganawed",
   "browser_specific_settings": {
@@ -11,8 +11,8 @@
     }
   },
   "icons": {
-    "48": "icons/icon.svg",
-    "96": "icons/icon.svg"
+    "32": "icons/icon-32.png",
+    "64": "icons/icon-64.png"
   },
   "permissions": [
     "compose",
@@ -26,6 +26,9 @@
   },
   "compose_action": {
     "default_title": "SoloSend",
-    "default_icon": "icons/icon.svg"
+    "default_icon": {
+      "32": "icons/icon-32.png",
+      "64": "icons/icon-64.png"
+    }
   }
 }

@@ -227,7 +227,8 @@ function notify(message) {
   try {
     browser.notifications.create({
       type: "basic",
-      iconUrl: browser.runtime.getURL("icons/icon.svg"),
+      // Raster, not the SVG: system notification backends are unreliable with SVG.
+      iconUrl: browser.runtime.getURL("icons/icon-64.png"),
       title: "SoloSend",
       message,
     }).catch(() => {});

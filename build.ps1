@@ -30,8 +30,9 @@ $dist = Join-Path $root 'dist'
 # LICENSE ships too: MIT requires the notice to accompany every copy.
 $Shipped = 'manifest.json', 'background.js', 'dialog', 'icons', 'LICENSE'
 
-# Everything a reviewer needs to rebuild the .xpi, plus test fixtures.
-$SourceOnly = 'README.md', 'BUILD.md', 'build.ps1', 'build.sh', '.gitignore', 'test-files'
+# Everything a reviewer needs to rebuild the .xpi and regenerate the icon PNGs,
+# plus test fixtures.
+$SourceOnly = 'README.md', 'BUILD.md', 'build.ps1', 'build.sh', '.gitignore', 'test-files', 'tools'
 
 # Fixed entry timestamp; keeps the output reproducible. ZIP cannot store dates
 # before 1980, so this is an arbitrary valid constant, not a real build time.
