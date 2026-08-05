@@ -107,3 +107,7 @@ and fired with the `alarms` API.
 ## Requirements
 
 Thunderbird 115 or newer.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
