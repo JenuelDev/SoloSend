@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "SoloSend",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "From the compose window, send your email to many recipients one at a time, with a delay between each — or schedule it for later.",
   "author": "Jenuel Oras Ganawed",
   "browser_specific_settings": {
